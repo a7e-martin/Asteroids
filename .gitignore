@@ -1,0 +1,39 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# Profiling
+*.vsp
+*.psess
+
+*.dmp
+
+# Executables
+*.exe
+*.out
+*.app
+
+*.sdf
+*.suo
+*.pdb
+*.opensdf
+*.aps
+*.ilk
+*.bsc
+*.user
+*.exp
