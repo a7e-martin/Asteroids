@@ -51,6 +51,7 @@ void c_Game::Launch()
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
 			{
 				//Activate the player shield
+				_player->ActivateShield();
 			}
 		}
 
@@ -60,6 +61,9 @@ void c_Game::Launch()
 			if (winEvent.type == sf::Event::Closed)
 			{
 				_win.close();
+			}
+			if (winEvent.type == sf::Event::MouseLeft)
+			{
 			}
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
@@ -117,7 +121,6 @@ bool c_Game::LineTouchesOrCrossesLine(c_LineSegment a, c_LineSegment b)
 bool c_Game::DoLinesIntersect(c_LineSegment a, c_LineSegment b)
 {
 	return DoBoundingBoxesIntersect(a, b) && LineTouchesOrCrossesLine(a, b) && LineTouchesOrCrossesLine(b, a);
-
 }
 
 bool c_Game::Collision(sf::ConvexShape shapeA, sf::ConvexShape shapeB)
@@ -198,9 +201,6 @@ float c_Game::GetTickCount()
 
 void c_Game::UpdateScene()
 {
-	//if (_gameOver)
-	//	return;
-
 	_collision = false;
 	_indexes.clear();
 
@@ -239,7 +239,7 @@ void c_Game::UpdateScene()
 		//Collision between the _player and asteroids
 		if (typeid(*(it.second)) != typeid(c_Player) && it.second->GetShape().getGlobalBounds().intersects(_player->GetShape().getGlobalBounds()) && typeid(*(it.second)) != typeid(c_Bullet))
 		{
-			if (it.second->IsColliding(*_player))
+			if (it.second->IsColliding(*_player) && !_player->IsInvicible())
 			{
 				_player->MakeInactive(1000);
 				if (!_player->GetRemainingLives())

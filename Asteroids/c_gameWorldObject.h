@@ -26,7 +26,7 @@ protected:
 public:
 	c_GameWorldObject(sf::RenderWindow& renderer, float dragForce, float rotationalForce, float accelerationFactor, float rotationalSpeed);
 	virtual ~c_GameWorldObject() { };
-	void Update();
+	virtual void Update();
 	virtual void Draw();
 	void Rotate(int direction);
 	float GetRotation();

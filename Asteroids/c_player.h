@@ -17,14 +17,18 @@ public:
 	int GetRemainingLives();
 	void Draw();
 	void ActivateShield();
+	bool IsInvicible();
+	void Update();
 private:
 	sf::Clock _fireClock;
 	int _activeBullets;
 	int _maxBullets;
 	float _timeBetweenFire;
 	float _lastShieldTime;
+	float _timeBetweenShield;
 	int _lives;
 	bool _invicibility;
+	float _shieldTime;
 };
 
 #endif
