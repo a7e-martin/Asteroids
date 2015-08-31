@@ -21,6 +21,7 @@ c_Player::c_Player(sf::RenderWindow& renderer) : c_GameWorldObject(renderer, 0.0
 	_timeBetweenFire = 250.0f;
 	_timeBetweenShield = 10000.0f;
 	_shieldTime = 2500.0f;
+	_lastShieldTime = -10000.0f;
 }
 
 void c_Player::Accelerate()
@@ -59,8 +60,9 @@ void c_Player::Reset()
 	_vX = 0;
 	_vY = 0;
 	_lives--;
-	_lastShieldTime = 0; //We set the last shield time to 0 in case the player dies just after his shield fade out (the player should have a shield when respawning)
-	ActivateShield();
+	_invicibility = true;
+	_lastShieldTime = c_Game::GetTickCount();
+// 	ActivateShield();
 }
 
 void c_Player::AddBullet()
@@ -77,15 +79,46 @@ void c_Player::Draw()
 {
 	c_GameWorldObject::Draw();
 
+	sf::Font font;
+	font.loadFromFile("arial.ttf");
+	sf::Text livesText;
+	livesText.setFont(font);
+	livesText.setCharacterSize(30);
+	livesText.setString("Lives");
+	livesText.setPosition(sf::Vector2f(10, 10));
+	_renderer->draw(livesText);
+
 	for (int i = 1; i <= _lives; i++)
 	{
 		sf::RectangleShape life;
 		life.setFillColor(sf::Color::Green);
-		life.setSize(sf::Vector2f(10, 10));
+		life.setSize(sf::Vector2f(20, 20));
 		life.setOutlineColor(sf::Color::White);
-		life.setPosition(sf::Vector2f(i * 20, 10));
+		life.setPosition(sf::Vector2f(livesText.getLocalBounds().width + i * 30, 20));
 		_renderer->draw(life);
 	}
+	//Draw the score of the player
+	sf::Text scoreText;
+	scoreText.setFont(font);
+	scoreText.setCharacterSize(30);
+	scoreText.setString("Score " + std::to_string(_score));
+	scoreText.setPosition(_renderer->getSize().x - scoreText.getLocalBounds().width - 10, 10);
+	_renderer->draw(scoreText);
+
+	//Indicate the status of the shield
+	sf::Text shieldStatusText;
+	shieldStatusText.setFont(font);
+	shieldStatusText.setCharacterSize(30);
+	shieldStatusText.setString("Shield");
+	shieldStatusText.setPosition(sf::Vector2f(10, _renderer->getSize().y - 40));
+	sf::RectangleShape shieldStatus;
+	shieldStatus.setSize(sf::Vector2f(20, 20));
+	shieldStatus.setOutlineColor(sf::Color::White);
+	shieldStatus.setFillColor((c_Game::GetTickCount() - _lastShieldTime > _timeBetweenShield && !_invicibility) ? sf::Color::Green : sf::Color::Red);
+	shieldStatus.setPosition(sf::Vector2f(shieldStatusText.getLocalBounds().width + 30, _renderer->getSize().y - 30));
+	_renderer->draw(shieldStatusText);
+	_renderer->draw(shieldStatus);
+
 	if (_invicibility)
 	{
 		//We draw a circle to represent the shield
@@ -93,7 +126,7 @@ void c_Player::Draw()
 		shield.setOrigin(25, 25);
 		shield.setFillColor(sf::Color::Transparent);
 		shield.setOutlineThickness(1);
-		shield.setOutlineColor(sf::Color::White);
+		shield.setOutlineColor(sf::Color::Cyan);
 		shield.setPosition(_x - (_shape.getLocalBounds().width / 2), _y - (_shape.getLocalBounds().height / 2));
 		_renderer->draw(shield);
 	}
@@ -101,7 +134,7 @@ void c_Player::Draw()
 
 void c_Player::ActivateShield()
 {
-	if (_lastShieldTime + _timeBetweenShield < c_Game::GetTickCount())
+	if ((c_Game::GetTickCount() - _lastShieldTime) > _timeBetweenShield)
 	{
 		_invicibility = true;
 		_lastShieldTime = c_Game::GetTickCount();
@@ -117,8 +150,10 @@ void c_Player::Update()
 {
 	c_GameWorldObject::Update();
 
-	if (c_Game::GetTickCount() > _lastShieldTime + _shieldTime)
-	{
-		_invicibility = false;
-	}
+	_invicibility = (c_Game::GetTickCount() - _lastShieldTime) < _shieldTime;
+}
+
+void c_Player::AddPoints(int points)
+{
+	_score += points;
 }

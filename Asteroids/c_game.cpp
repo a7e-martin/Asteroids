@@ -67,7 +67,7 @@ void c_Game::Launch()
 			}
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
-				c_Asteroid* ast = new c_Asteroid(_win, 1, mousePos, 0.5, 0.5);
+				c_Asteroid* ast = new c_Asteroid(_win, 1, mousePos);
 				InsertObject(*ast);
 			}
 		}
@@ -184,6 +184,11 @@ bool c_Game::Collision(sf::ConvexShape shapeA, sf::ConvexShape shapeB)
 
 void c_Game::RemoveObject(int index)
 {
+	if (typeid(*(_gameWorldObjects.at(index))) == typeid(c_Asteroid))
+	{
+		_asteroidsCount--;
+		std::cout << _asteroidsCount << "\n";
+	}
 	delete _gameWorldObjects.at(index);
 	_gameWorldObjects.erase(index);
 }
@@ -192,6 +197,11 @@ void c_Game::InsertObject(c_GameWorldObject& newObject)
 {
 	_gameWorldObjects.insert(std::pair<int, c_GameWorldObject*>(_mapCounter, &newObject));
 	_mapCounter++;
+	if (typeid(newObject) == typeid(c_Asteroid))
+	{
+		_asteroidsCount++;
+		std::cout << _asteroidsCount << "\n";
+	}
 }
 
 float c_Game::GetTickCount()
@@ -203,6 +213,21 @@ void c_Game::UpdateScene()
 {
 	_collision = false;
 	_indexes.clear();
+
+	if (_asteroidsCount == 0)
+	{
+		_actualWave++;
+		for (int i = 0; i < _actualWave; i++)
+		{
+			std::srand(GetTickCount());
+			sf::Vector2i pos;
+			pos.x = std::rand() % _win.getSize().x - _player->GetPosition().x;
+			pos.y = std::rand() % _win.getSize().y - _player->GetPosition().y;
+			c_Asteroid* asteroid = new c_Asteroid(_win, 1, pos);
+
+			InsertObject(*asteroid);
+		}
+	}
 
 	for (auto& it : _gameWorldObjects)
 	{
@@ -220,11 +245,12 @@ void c_Game::UpdateScene()
 							c_Asteroid &asteroid = *dynamic_cast<c_Asteroid *>(it2.second);
 							MarkForDelete(it.first);
 							MarkForDelete(it2.first);
-
+							_player->AddPoints(asteroid.GetSize() * 10);
+							
 							if (asteroid.GetSize() < 3)
 							{
-								c_Asteroid *ast1 = new c_Asteroid(_win, asteroid.GetSize() + 1, asteroid.GetPos(), asteroid.GetVX(), asteroid.GetVY());
-								c_Asteroid *ast2 = new c_Asteroid(_win, asteroid.GetSize() + 1, asteroid.GetPos(), -asteroid.GetVX(), -asteroid.GetVY());
+								c_Asteroid *ast1 = new c_Asteroid(_win, asteroid.GetSize() + 1, asteroid.GetPos());
+								c_Asteroid *ast2 = new c_Asteroid(_win, asteroid.GetSize() + 1, asteroid.GetPos());
 
 								InsertObject(*ast1);
 								InsertObject(*ast2);
@@ -281,6 +307,15 @@ void c_Game::DrawScene()
 			it.second->Draw();
 		}
 	}
+	//Draw the wave number
+	sf::Font font;
+	font.loadFromFile("arial.ttf");
+	sf::Text waveText;
+	waveText.setFont(font);
+	waveText.setCharacterSize(30);
+	waveText.setString("Wave " + std::to_string(_actualWave));
+	waveText.setPosition(_win.getSize().x - waveText.getLocalBounds().width - 30, _win.getSize().y - waveText.getLocalBounds().height - 30);
+	_win.draw(waveText);
 
 	if (_gameOver)
 	{

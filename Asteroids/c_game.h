@@ -33,7 +33,8 @@ private:
 	std::vector<int> _indexes;
 	c_Player* _player;
 	static int _maxBullets;
-	int _bulletsCount;
+	int _asteroidsCount;
+	int _actualWave;
 	static int _mapCounter;
 	static sf::Clock _timer;
 	bool _collision;

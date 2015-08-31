@@ -1,6 +1,6 @@
 #include "c_asteroid.h"
 
-c_Asteroid::c_Asteroid(sf::RenderWindow& renderer, int size, sf::Vector2i pos, float vX, float vY) : c_GameWorldObject(renderer, 0.0f, 0.5f, 1.5f, 0.0f), _size(size), _minVary(-20), _maxVary(20){
+c_Asteroid::c_Asteroid(sf::RenderWindow& renderer, int size, sf::Vector2i pos) : c_GameWorldObject(renderer, 0.0f, 0.5f, 1.5f, 0.0f), _size(size), _minVary(-20), _maxVary(20){
 
 	//Create a cricle which will give us the coordinates to create the shape
 	sf::CircleShape circle(60 / size, 20 / size);
@@ -14,7 +14,7 @@ c_Asteroid::c_Asteroid(sf::RenderWindow& renderer, int size, sf::Vector2i pos, f
 
 	_shape.setOutlineThickness(1.0f);
 	_shape.setFillColor(sf::Color::Transparent);
-	_shape.setOutlineColor(sf::Color::White);
+	_shape.setOutlineColor(sf::Color::Yellow);
 
 	//Apply the deformations
 	std::srand((int)this);

@@ -19,6 +19,7 @@ public:
 	void ActivateShield();
 	bool IsInvicible();
 	void Update();
+	void AddPoints(int points);
 private:
 	sf::Clock _fireClock;
 	int _activeBullets;
@@ -29,6 +30,7 @@ private:
 	int _lives;
 	bool _invicibility;
 	float _shieldTime;
+	int _score;
 };
 
 #endif

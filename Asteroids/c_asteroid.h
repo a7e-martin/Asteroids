@@ -7,7 +7,7 @@
 
 class c_Asteroid : public c_GameWorldObject{
 public:
-	c_Asteroid(sf::RenderWindow& renderer, int size, sf::Vector2i pos, float vX, float vY);
+	c_Asteroid(sf::RenderWindow& renderer, int size, sf::Vector2i pos);
 	int GetSize();
 	sf::Vector2i GetPos();
 	float GetVX();

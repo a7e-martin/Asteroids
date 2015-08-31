@@ -10,7 +10,7 @@ c_Bullet::c_Bullet(sf::RenderWindow& renderer, c_Player& player, sf::Vector2f po
 	_shape.setOrigin(10, 9);
 	_x = position.x;
 	_y = position.y;
-	_shape.setOutlineColor(sf::Color::White);
+	_shape.setOutlineColor(sf::Color::Blue);
 	_shape.setOutlineThickness(1.0f);
 
 	//Set the direction and velocity of the bullet
