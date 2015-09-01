@@ -2,7 +2,7 @@
 #include "c_game.h"
 #include "c_bullet.h"
 
-c_Player::c_Player(sf::RenderWindow& renderer) : c_GameWorldObject(renderer, 0.05f, 7.0f, 1.5f, 0.0f), _lives(3), _maxBullets(10), _invicibility(false){
+c_Player::c_Player(sf::RenderWindow& renderer) : c_GameWorldObject(renderer, 0.05f, 5.0f, 1.0f, 0.0f), _lives(3), _maxBullets(10), _invicibility(false){
 
 	sf::ConvexShape shape;
 	shape.setPointCount(4);

@@ -62,14 +62,11 @@ void c_Game::Launch()
 			{
 				_win.close();
 			}
-			if (winEvent.type == sf::Event::MouseLeft)
-			{
-			}
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-			{
-				c_Asteroid* ast = new c_Asteroid(_win, 1, mousePos);
-				InsertObject(*ast);
-			}
+			//if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			//{
+			//	c_Asteroid* ast = new c_Asteroid(_win, 1, mousePos);
+			//	InsertObject(*ast);
+			//}
 		}
 
 		_win.clear();
