@@ -80,7 +80,7 @@ void c_Player::Draw()
 	c_GameWorldObject::Draw();
 
 	sf::Font font;
-	font.loadFromFile("arial.ttf");
+	font.loadFromFile("eve.ttf");
 	sf::Text livesText;
 	livesText.setFont(font);
 	livesText.setCharacterSize(30);

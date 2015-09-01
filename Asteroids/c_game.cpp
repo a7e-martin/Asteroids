@@ -306,7 +306,7 @@ void c_Game::DrawScene()
 	}
 	//Draw the wave number
 	sf::Font font;
-	font.loadFromFile("arial.ttf");
+	font.loadFromFile("eve.ttf");
 	sf::Text waveText;
 	waveText.setFont(font);
 	waveText.setCharacterSize(30);
@@ -317,7 +317,7 @@ void c_Game::DrawScene()
 	if (_gameOver)
 	{
 		sf::Font font;
-		font.loadFromFile("arial.ttf");
+		font.loadFromFile("eve.ttf");
 		sf::Text gameOverText;
 		gameOverText.setFont(font);
 		gameOverText.setString("Game Over !");
