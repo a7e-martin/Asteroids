@@ -130,7 +130,6 @@
     <ClCompile Include="c_bullet.cpp" />
     <ClCompile Include="c_game.cpp" />
     <ClCompile Include="c_gameWorldObject.cpp" />
-    <ClCompile Include="c_lineSegment.cpp" />
     <ClCompile Include="c_player.cpp" />
     <ClCompile Include="c_projection.cpp" />
     <ClCompile Include="main.cpp" />
@@ -140,7 +139,6 @@
     <ClInclude Include="c_bullet.h" />
     <ClInclude Include="c_game.h" />
     <ClInclude Include="c_gameWorldObject.h" />
-    <ClInclude Include="c_lineSegment.h" />
     <ClInclude Include="c_player.h" />
     <ClInclude Include="c_projection.h" />
   </ItemGroup>

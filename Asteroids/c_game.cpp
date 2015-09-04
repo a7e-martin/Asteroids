@@ -50,7 +50,6 @@ void c_Game::Launch()
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
 			{
-				//Activate the player shield
 				_player->ActivateShield();
 			}
 		}
@@ -62,11 +61,6 @@ void c_Game::Launch()
 			{
 				_win.close();
 			}
-			//if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-			//{
-			//	c_Asteroid* ast = new c_Asteroid(_win, 1, mousePos);
-			//	InsertObject(*ast);
-			//}
 		}
 
 		_win.clear();
@@ -77,107 +71,6 @@ void c_Game::Launch()
 
 }
 
-bool c_Game::DoBoundingBoxesIntersect(c_LineSegment a, c_LineSegment b)
-{
-	return a.GetBoundingBox().intersects(b.GetBoundingBox());
-}
-
-double c_Game::CrossProduct(sf::Vector2i pointA, sf::Vector2i pointB)
-{
-	return (pointA.x * pointB.y) - (pointB.x * pointA.y);
-}
-
-bool c_Game::IsPointOnLine(c_LineSegment line, sf::Vector2i point)
-{
-	c_LineSegment lineTmp(sf::Vector2i(0, 0), sf::Vector2i(line._second.x - line._first.x, line._second.y - line._first.y));
-	sf::Vector2i pointTmp;
-	pointTmp.x = point.x - line._first.x;
-	pointTmp.y = point.y - line._first.y;
-	double r = CrossProduct(lineTmp._second, pointTmp);
-	return std::abs(r) < 10;
-}
-
-bool c_Game::IsPointRightOfLine(c_LineSegment line, sf::Vector2i point)
-{
-	c_LineSegment lineTmp(sf::Vector2i(0, 0), sf::Vector2i(line._second.x - line._first.x, line._second.y - line._first.y));
-
-	sf::Vector2i pointTmp;
-	pointTmp.x = point.x - line._first.x;
-	pointTmp.y = point.y - line._first.y;
-
-	double r = CrossProduct(lineTmp._second, pointTmp);
-	return CrossProduct(lineTmp._second, pointTmp) < 0;
-}
-
-bool c_Game::LineTouchesOrCrossesLine(c_LineSegment a, c_LineSegment b)
-{
-	return IsPointOnLine(a, b._first) || IsPointOnLine(a, b._second) || (IsPointRightOfLine(a, b._first) ^ IsPointRightOfLine(a, b._second));
-
-}
-
-bool c_Game::DoLinesIntersect(c_LineSegment a, c_LineSegment b)
-{
-	return DoBoundingBoxesIntersect(a, b) && LineTouchesOrCrossesLine(a, b) && LineTouchesOrCrossesLine(b, a);
-}
-
-bool c_Game::Collision(sf::ConvexShape shapeA, sf::ConvexShape shapeB)
-{
-	bool result = false;
-	std::vector<c_LineSegment> linesA;
-	std::vector<c_LineSegment> linesB;
-
-	//ShapeA
-	for (int i = 0; i < shapeA.getPointCount(); i++)
-	{
-		if (i == shapeA.getPointCount() - 1)
-		{
-			sf::Vector2i firstPoint(shapeA.getTransform().transformPoint(shapeA.getPoint(i)));
-			sf::Vector2i secondPoint(shapeA.getTransform().transformPoint(shapeA.getPoint(0)));
-			c_LineSegment ls(firstPoint, secondPoint);
-			linesA.push_back(ls);
-		}
-		else
-		{
-			sf::Vector2i firstPoint(shapeA.getTransform().transformPoint(shapeA.getPoint(i)));
-			sf::Vector2i secondPoint(shapeA.getTransform().transformPoint(shapeA.getPoint(i + 1)));
-			c_LineSegment ls(firstPoint, secondPoint);
-			linesA.push_back(ls);
-		}
-	}
-
-	//ShapeB
-	for (int i = 0; i < shapeB.getPointCount(); i++)
-	{
-		if (i == shapeB.getPointCount() - 1)
-		{
-			sf::Vector2i firstPoint(shapeB.getTransform().transformPoint(shapeB.getPoint(i)));
-			sf::Vector2i secondPoint(shapeB.getTransform().transformPoint(shapeB.getPoint(0)));
-			c_LineSegment ls(firstPoint, secondPoint);
-			linesB.push_back(ls);
-		}
-		else
-		{
-			sf::Vector2i firstPoint(shapeB.getTransform().transformPoint(shapeB.getPoint(i)));
-			sf::Vector2i secondPoint(shapeB.getTransform().transformPoint(shapeB.getPoint(i + 1)));
-			c_LineSegment ls(firstPoint, secondPoint);
-			linesB.push_back(ls);
-		}
-	}
-
-	for (auto& itA : linesA)
-	{
-		for (auto& itB : linesB)
-		{
-			if (DoLinesIntersect(itA, itB))
-			{
-				result = true;
-				break;
-			}
-
-		}
-	}
-	return result;
-}
 
 void c_Game::RemoveObject(int index)
 {

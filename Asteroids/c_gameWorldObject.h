@@ -11,10 +11,7 @@ protected:
 	sf::RenderWindow *_renderer;
 	//Object shape (Convex)
 	sf::ConvexShape _shape;
-	//Object position
 	float _x, _y;
-	//Current angle
-	float _angle;
 	//Current velocity
 	float _vX, _vY;
 	float _dragFactor;
