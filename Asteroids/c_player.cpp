@@ -17,6 +17,7 @@ c_Player::c_Player(sf::RenderWindow& renderer) : c_GameWorldObject(renderer, 0.0
 	_x = _renderer->getSize().x / 2;
 	_y = _renderer->getSize().y / 2;
 	_shape.setOrigin(25, 50);
+	_uiFont.loadFromFile("eve.ttf");
 
 	_timeBetweenFire = 250.0f;
 	_timeBetweenShield = 10000.0f;
@@ -62,7 +63,6 @@ void c_Player::Reset()
 	_lives--;
 	_invicibility = true;
 	_lastShieldTime = c_Game::GetTickCount();
-// 	ActivateShield();
 }
 
 void c_Player::AddBullet()
@@ -78,11 +78,8 @@ int c_Player::GetRemainingLives()
 void c_Player::Draw()
 {
 	c_GameWorldObject::Draw();
-
-	sf::Font font;
-	font.loadFromFile("eve.ttf");
 	sf::Text livesText;
-	livesText.setFont(font);
+	livesText.setFont(*c_Game::GetUiFont());
 	livesText.setCharacterSize(30);
 	livesText.setString("Lives");
 	livesText.setPosition(sf::Vector2f(10, 10));
@@ -99,7 +96,7 @@ void c_Player::Draw()
 	}
 	//Draw the score of the player
 	sf::Text scoreText;
-	scoreText.setFont(font);
+	scoreText.setFont(*c_Game::GetUiFont());
 	scoreText.setCharacterSize(30);
 	scoreText.setString("Score " + std::to_string(_score));
 	scoreText.setPosition(_renderer->getSize().x - scoreText.getLocalBounds().width - 10, 10);
@@ -107,7 +104,7 @@ void c_Player::Draw()
 
 	//Indicate the status of the shield
 	sf::Text shieldStatusText;
-	shieldStatusText.setFont(font);
+	shieldStatusText.setFont(*c_Game::GetUiFont());
 	shieldStatusText.setCharacterSize(30);
 	shieldStatusText.setString("Shield");
 	shieldStatusText.setPosition(sf::Vector2f(10, _renderer->getSize().y - 40));

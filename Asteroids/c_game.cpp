@@ -7,6 +7,7 @@
 
 sf::Clock c_Game::_timer;
 int c_Game::_mapCounter;
+sf::Font* c_Game::_uiFont = new sf::Font;
 
 c_Game::c_Game(){
 
@@ -143,10 +144,8 @@ void c_Game::DrawScene()
 		}
 	}
 	//Draw the wave number
-	sf::Font font;
-	font.loadFromFile("eve.ttf");
 	sf::Text waveText;
-	waveText.setFont(font);
+	waveText.setFont(*_uiFont);
 	waveText.setCharacterSize(30);
 	waveText.setString("Wave " + std::to_string(_actualWave));
 	waveText.setPosition(_win.getSize().x - waveText.getLocalBounds().width - 30, _win.getSize().y - waveText.getLocalBounds().height - 30);
@@ -154,10 +153,8 @@ void c_Game::DrawScene()
 
 	if (_gameOver)
 	{
-		sf::Font font;
-		font.loadFromFile("eve.ttf");
 		sf::Text gameOverText;
-		gameOverText.setFont(font);
+		gameOverText.setFont(*_uiFont);
 		gameOverText.setString("Game Over !");
 		gameOverText.setCharacterSize(60);
 		gameOverText.setPosition(_win.getSize().x / 2, _win.getSize().y / 2);
@@ -184,6 +181,7 @@ void c_Game::Update()
 
 	_win.create(sf::VideoMode(1536, 986), "Asteroids");
 	_win.setFramerateLimit(60);
+	_uiFont->loadFromFile("eve.ttf");
 	_player = new c_Player(_win);
 	InsertObject(*_player);
 	_timer.restart();
@@ -213,7 +211,6 @@ void c_Game::Update()
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 			{
 				c_Bullet* bullet = _player->Fire();
-
 				if (bullet)
 				{
 					InsertObject(*bullet);
@@ -233,6 +230,7 @@ void c_Game::Update()
 				sf::Packet packet;
 				packet << "quit";
 				t1.send(packet);
+				t1.disconnect();
 				_win.close();
 			}
 		}
@@ -250,4 +248,9 @@ void c_Game::JoinThread()
 	{
 		_updateThread->join();
 	}
+}
+
+sf::Font* c_Game::GetUiFont()
+{
+	return _uiFont;
 }

@@ -22,6 +22,7 @@ public:
 	void AddPoints(int points);
 private:
 	sf::Clock _fireClock;
+	sf::Font _uiFont;
 	int _activeBullets;
 	int _maxBullets;
 	float _timeBetweenFire;

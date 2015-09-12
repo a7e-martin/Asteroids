@@ -21,13 +21,14 @@ public:
 	void DrawScene();
 	void MarkForDelete(int index); //This one ensures we do not try to delete the same object twice
 	void JoinThread();
+	static sf::Font* GetUiFont();
 private:
 	std::thread* _updateThread;
 	sf::RenderWindow _win;
+	static sf::Font* _uiFont;
 	std::map<int, c_GameWorldObject*> _gameWorldObjects;
 	std::vector<int> _indexes;
 	c_Player* _player;
-	static int _maxBullets;
 	int _asteroidsCount;
 	int _actualWave;
 	static int _mapCounter;
