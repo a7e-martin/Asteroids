@@ -3,6 +3,7 @@
 #include "c_game.h"
 #include "c_asteroid.h"
 #include "c_bullet.h"
+#include "SFML/Network.hpp"
 
 sf::Clock c_Game::_timer;
 int c_Game::_mapCounter;
@@ -13,62 +14,7 @@ c_Game::c_Game(){
 
 void c_Game::Launch()
 {
-	_win.create(sf::VideoMode(1536, 986), "Asteroids");
-	_win.setFramerateLimit(60);
-	_player = new c_Player(_win);
-	InsertObject(*_player);
-
-	_timer.restart();
-	while (_win.isOpen())
-	{
-		sf::Vector2i mousePos = sf::Mouse::getPosition(_win);
-
-		if (!_gameOver)
-		{
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-			{
-				_player->Rotate(-1);
-			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-			{
-				_player->Rotate(1);
-			}
-
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-			{
-				_player->Accelerate();
-			}
-
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-			{
-				c_Bullet* bullet = _player->Fire();
-
-				if (bullet)
-				{
-					InsertObject(*bullet);
-				}
-			}
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
-			{
-				_player->ActivateShield();
-			}
-		}
-
-		sf::Event winEvent;
-		while (_win.pollEvent(winEvent))
-		{
-			if (winEvent.type == sf::Event::Closed)
-			{
-				_win.close();
-			}
-		}
-
-		_win.clear();
-		UpdateScene();
-		DrawScene();
-		_win.display();
-	}
-
+	_updateThread = new std::thread(&c_Game::Update, this);
 }
 
 
@@ -90,7 +36,6 @@ void c_Game::InsertObject(c_GameWorldObject& newObject)
 	if (typeid(newObject) == typeid(c_Asteroid))
 	{
 		_asteroidsCount++;
-		std::cout << _asteroidsCount << "\n";
 	}
 }
 
@@ -232,3 +177,77 @@ void c_Game::MarkForDelete(int index)
 	}
 }
 
+void c_Game::Update()
+{
+	sf::TcpSocket t1;
+	t1.connect("127.0.0.1", 5555);
+
+	_win.create(sf::VideoMode(1536, 986), "Asteroids");
+	_win.setFramerateLimit(60);
+	_player = new c_Player(_win);
+	InsertObject(*_player);
+	_timer.restart();
+
+	while (_win.isOpen())
+	{
+
+
+		sf::Vector2i mousePos = sf::Mouse::getPosition(_win);
+
+		if (!_gameOver)
+		{
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+			{
+				_player->Rotate(-1);
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+			{
+				_player->Rotate(1);
+			}
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+			{
+				_player->Accelerate();
+			}
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+			{
+				c_Bullet* bullet = _player->Fire();
+
+				if (bullet)
+				{
+					InsertObject(*bullet);
+				}
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+			{
+				_player->ActivateShield();
+			}
+		}
+
+		sf::Event winEvent;
+		while (_win.pollEvent(winEvent))
+		{
+			if (winEvent.type == sf::Event::Closed)
+			{
+				sf::Packet packet;
+				packet << "quit";
+				t1.send(packet);
+				_win.close();
+			}
+		}
+
+		_win.clear();
+		UpdateScene();
+		DrawScene();
+		_win.display();
+	}
+}
+
+void c_Game::JoinThread()
+{
+	if (_updateThread->joinable())
+	{
+		_updateThread->join();
+	}
+}

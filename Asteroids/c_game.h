@@ -7,7 +7,7 @@
 #include "c_player.h"
 #include <vector>
 #include <map>
-
+#include <thread>
 
 class c_Game{
 public:
@@ -16,10 +16,13 @@ public:
 	void InsertObject(c_GameWorldObject& newObject);
 	void RemoveObject(int index);
 	static float GetTickCount();
+	void Update();
 	void UpdateScene();
 	void DrawScene();
 	void MarkForDelete(int index); //This one ensures we do not try to delete the same object twice
+	void JoinThread();
 private:
+	std::thread* _updateThread;
 	sf::RenderWindow _win;
 	std::map<int, c_GameWorldObject*> _gameWorldObjects;
 	std::vector<int> _indexes;
