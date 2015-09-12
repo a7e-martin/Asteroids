@@ -4,7 +4,6 @@
 
 void c_Server::Start(int port)
 {
-	_listener.setBlocking(false);
 	_running = true;
 	_listenThread = new std::thread(&c_Server::ListenForNewClients, this);
 
@@ -63,21 +62,22 @@ void c_Server::ListenForNewClients()
 			std::cout << "new client connected\n";
 			_selector.add(*newClient);
 			_clients.insert(std::pair<int, sf::TcpSocket*>(_clients.size(), newClient));
-			std::this_thread::sleep_for(std::chrono::milliseconds(50));
 		}
 	}
 }
 
 void c_Server::JoinThread()
 {
-	if (_updateThread->joinable())
+	if (_updateThread->joinable() && _updateThread->joinable())
 	{
 		_updateThread->join();
+		delete _updateThread;
 	}
 }
 
 void c_Server::Stop()
 {
+	_listener.close();
 	if (_listenThread && _listenThread->joinable())
 	{
 		_listenThread->join();
