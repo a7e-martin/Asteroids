@@ -128,3 +128,8 @@ void c_GameWorldObject::MakeInactive(float time)
 	_inactiveTime = c_Game::GetTickCount() + time;
 	_active = false;
 }
+
+sf::Vector2f c_GameWorldObject::GetPosition()
+{
+	return sf::Vector2f(_x, _y);
+}

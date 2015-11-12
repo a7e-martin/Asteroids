@@ -3,7 +3,6 @@
 #include "c_game.h"
 #include "c_asteroid.h"
 #include "c_bullet.h"
-#include "SFML/Network.hpp"
 
 sf::Clock c_Game::_timer;
 int c_Game::_mapCounter;
@@ -24,7 +23,6 @@ void c_Game::RemoveObject(int index)
 	if (typeid(*(_gameWorldObjects.at(index))) == typeid(c_Asteroid))
 	{
 		_asteroidsCount--;
-		std::cout << _asteroidsCount << "\n";
 	}
 	delete _gameWorldObjects.at(index);
 	_gameWorldObjects.erase(index);
@@ -176,8 +174,6 @@ void c_Game::MarkForDelete(int index)
 
 void c_Game::Update()
 {
-	sf::TcpSocket t1;
-	t1.connect("127.0.0.1", 5555);
 
 	_win.create(sf::VideoMode(1536, 986), "Asteroids");
 	_win.setFramerateLimit(60);
@@ -227,10 +223,6 @@ void c_Game::Update()
 		{
 			if (winEvent.type == sf::Event::Closed)
 			{
-				sf::Packet packet;
-				packet << "quit";
-				t1.send(packet);
-				t1.disconnect();
 				_win.close();
 			}
 		}

@@ -26,6 +26,7 @@ public:
 	virtual void Update();
 	virtual void Draw();
 	void Rotate(int direction);
+	sf::Vector2f GetPosition();
 	float GetRotation();
 	virtual bool Remove() { return false; };
 	sf::ConvexShape& GetShape();

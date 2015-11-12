@@ -36,9 +36,6 @@
     <ClCompile Include="c_projection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="c_server.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="c_game.h">
@@ -57,9 +54,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="c_projection.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="c_server.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
